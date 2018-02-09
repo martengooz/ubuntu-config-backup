@@ -8,15 +8,16 @@ backup_path = "/tmp/backup/"
 
 # Names of the software to copy. Available software is in default_paths.json
 software_to_backup = [
-    #"ssh",
+    "ssh",
     "samba",
-    #"php",
+    "php",
     #"apache2",
     #"fail2ban",
     #"ddclient",
     "nginx",
     #"lighttpd",
     #"ddclient",
+    "cron"
 ]
 
 default_paths = json.load(open('default_paths.json'))
@@ -46,7 +47,7 @@ def copyFiles(files, bpath):
             if os.path.isdir(src):              # Is a directory
                 if os.path.isdir(dst):          # Directory already exist in dst
                     print "ERROR: " + dst + " already exists. Will overwrite." #TODO add prompt
-                    os.removedirs(dst)
+                    rmtree(dst)
                 elif os.path.isfile(dst):       # Regular file already exist in dst
                     print "ERROR: " + dst + " is a regualar file. Will overwrite." #TODO add prompt
                     os.remove(dst)
@@ -56,7 +57,7 @@ def copyFiles(files, bpath):
             elif os.path.isfile(src):           # Is a file
                 if os.path.isdir(dst):          # Directory already exists in dst
                     print "ERROR: " + dst + " is a directory. Will overwrite." #TODO add prompt
-                    os.removedirs(dst)
+                    rmtree(dst)
                 elif os.path.isfile(dst):       # Regular file already exists in dst
                     print "ERROR: File exists. " + dst
                     os.remove(dst)
@@ -66,8 +67,14 @@ def copyFiles(files, bpath):
                 copy(src, dst)
             else:
                 print "ERROR: Couldn't find " + src
+        except IOError, e:
+            print "ERROR: Permission denied: " + str(e)
         except Exception as e:
             raise
+
+# Check for sudo
+if not(os.getuid() == 0):
+    print "Not sudo, you might not have permission for some files."
 
 try:
     print "Creating backup directory"
