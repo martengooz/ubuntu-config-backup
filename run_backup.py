@@ -77,7 +77,7 @@ parser.parse_args(['--noroot'])
 if not(os.getuid() == 0) and not(parser.parse_args().noroot):
     print "WARNING: Not root, you might not have permission to copy some files."
     print "If you still want to run without root priveleges, please add the --no-root flag"
-    sys.exit(0)
+    sys.exit(1)
 
 try:
     print "Creating backup directory"
