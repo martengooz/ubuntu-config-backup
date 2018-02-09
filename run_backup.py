@@ -4,7 +4,6 @@ import sys
 import pwd
 import backup_conf
 import default_paths
-import getpass
 import argparse
 from shutil import copytree, rmtree, copy
 
@@ -109,13 +108,13 @@ parser = argparse.ArgumentParser(description="""
 parser.add_argument('-n','--noroot', action='store_const',\
     help='run without root priveleges.', const=True)
 parser.add_argument('-u', '--users', action='store_const',\
-    help='Don\'t backup users homes.', const=True)
+    help='don\'t backup users homes.', const=True)
 parser.add_argument('-c', '--custom', action='store_const',\
-    help='Don\'t backup custom files/directories in CUSTOM_FILES.', const=True)
+    help='don\'t backup custom files/directories in CUSTOM_FILES.', const=True)
 parser.add_argument('-p', '--packages', action='store_const',\
-    help='Don\'t backup packages config files/directories in PACKAGES_CONFIG.', const=True)
+    help='don\'t backup packages config files/directories in PACKAGES_CONFIG.', const=True)
 parser.add_argument('-o', '--override', action='store_const',\
-    help='Don\'t override/include the packages in CUSTOM_PACKAGES_CONFIG.', const=True)
+    help='don\'t override/include the packages in CUSTOM_PACKAGES_CONFIG.', const=True)
 args = parser.parse_args()
 
 # Check for sudo
