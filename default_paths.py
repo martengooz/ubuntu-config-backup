@@ -35,5 +35,5 @@ PATHS = {
     "php7.0-fpm": "/etc/php/7.0/fpm/php.ini",
     "samba": "/etc/samba/smb.conf",
     "ssh": "/etc/ssh/ssh_config",
-    "sshd": "/etc/ssh/sshd_conf"
+    "sshd": "/etc/ssh/sshd_config"
 }
