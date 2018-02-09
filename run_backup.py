@@ -33,11 +33,11 @@ def getPackageList (softwarelist, softwarepaths):
                     backupfiles.append(path)
             else:
                 backupfiles.append(softwarepaths[software]) # Single file/directory
-        except KeyError, e: # If not in softwarepaths
-            print "ERROR: the path(s) for " + str(e) + \
-                " is not in the default_paths.py dictionary. Please add it manually."
+        except KeyError as e: # If not in softwarepaths
+            print("ERROR: the path(s) for " + str(e) + \
+                " is not in the default_paths.py dictionary. Please add it manually.")
         except:
-            print "ERROR: An error occured when locating the default path for " + software
+            print("ERROR: An error occured when locating the default path for " + software)
     return backupfiles
 
 # Get paths to users homes
@@ -50,8 +50,8 @@ def getUserHomes(users):
         elif users == "all":
             return ["/home"]
         else:
-            print "ERROR: invalid format for USERS in backup_conf.py"
-            print 'Expecting "all", "current", "none" or a list of usernames.'
+            print("ERROR: invalid format for USERS in backup_conf.py")
+            print('Expecting "all", "current", "none" or a list of usernames.')
             return []
     else:
         userhomes = []
@@ -61,8 +61,8 @@ def getUserHomes(users):
                 userhomes.append(os.path.expanduser("~"+user))
             except KeyError:
                 print("ERROR: User " + user + " does not exist, skipping.")
-            except TypeError, e:
-                print "ERROR: Cannot find user " + str(user) + " Exception: " + str(e)
+            except TypeError as e:
+                print("ERROR: Cannot find user " + str(user) + " Exception: " + str(e))
         return userhomes
 
 # Copy the files in filelist to the backup directory
@@ -73,38 +73,38 @@ def copyFiles(files, bpath):
         try:
             if os.path.isdir(src):              # Is a directory
                 if os.path.isdir(dst):          # Directory already exist in dst
-                    print "INFO: " + dst + " already exists. Will overwrite." #TODO add prompt
+                    print("INFO: " + dst + " already exists. Will overwrite.") #TODO add prompt
                     rmtree(dst)
                 elif os.path.isfile(dst):       # Regular file already exist in dst
-                    print "ERROR: " + dst + " is a regualar file. Will overwrite." #TODO add prompt
+                    print("ERROR: " + dst + " is a regualar file. Will overwrite.") #TODO add prompt
                     os.remove(dst)
                 # Directory does not exist :)
-                print "Copying " + src + " to " + dst
+                print("Copying " + src + " to " + dst)
                 copytree(src, dst)
             elif os.path.isfile(src):           # Is a file
                 if os.path.isdir(dst):          # Directory already exists in dst
-                    print "ERROR: " + dst + " is a directory. Will overwrite." #TODO add prompt
+                    print("ERROR: " + dst + " is a directory. Will overwrite.") #TODO add prompt
                     rmtree(dst)
                 elif os.path.isfile(dst):       # Regular file already exists in dst
-                    print "INFO: " + dst + " already exists. Will overwrite."
+                    print("INFO: " + dst + " already exists. Will overwrite.")
                     os.remove(dst)
                 if not(os.path.isdir(bpath + os.path.dirname(src))):
                     os.makedirs(bpath + os.path.dirname(src))
-                print "Copying " + src + " to " + dst
+                print("Copying " + src + " to " + dst)
                 copy(src, dst)
             else:
-                print "ERROR: Couldn't find " + src
-        except IOError, e:
-            print str(e)
-        except OSError, e:
-            print e
+                print("ERROR: Couldn't find " + src)
+        except IOError as e:
+            print(str(e))
+        except OSError as e:
+            print(e)
         except Exception as e:
             raise
 
 
 parser = argparse.ArgumentParser(description="""
     A software used to backup config files and user homes in Ubunutu/Debian based distros.
-    By default everything specified in backup_conf.py will be backed up.      
+    By default everything specified in backup_conf.py will be backed up.
     """)
 parser.add_argument('-n','--noroot', action='store_const',\
     help='run without root priveleges.', const=True)
@@ -120,19 +120,19 @@ args = parser.parse_args()
 
 # Check for sudo
 if not(os.getuid() == 0) and not(args.noroot):
-    print "WARNING: Running as non-root, you might not have permission to copy some files."
-    print "If you still want to run without root priveleges, please add the --noroot flag"
+    print("WARNING: Running as non-root, you might not have permission to copy some files.")
+    print("If you still want to run without root priveleges, please add the --noroot flag")
     sys.exit(1)
 
 # Create backup directory
 try:
-    print "Creating backup directory"
+    print("Creating backup directory")
     if backupPath.endswith('/'):
         backupPath = backupPath[:-1]
     os.makedirs(backupPath)
 except:
     #TODO add prompt if user want to override
-    print "Backup directory exists"
+    print("Backup directory exists")
 
 # Backup users
 if not(args.users): # True if -u flag is NOT set
